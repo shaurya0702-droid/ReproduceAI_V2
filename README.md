@@ -7,18 +7,6 @@ Instead of functioning as another "Chat with PDF" application, ReproduceAI focus
 
 ---
 
-# Screenshots
-
-## Upload & Analysis
-
-![First](images/repro_1.jpeg)
-
-![Second](images/repro_2.jpeg)
-
-inside an `images/` directory and reference them here.
-
----
-
 # Why ReproduceAI?
 
 Reading research papers is only the first step.
@@ -36,6 +24,17 @@ Actually reproducing a paper requires identifying:
 These details are often scattered throughout the paper, making reproduction time-consuming.
 
 ReproduceAI automates this process by combining Retrieval-Augmented Generation (RAG) with structured metadata extraction, then presents everything through a single conversation — one-click tool buttons for the structured outputs, and free-form chat for anything else.
+
+---
+
+# Screenshots
+
+
+![First](Reproduce_AI/images/repro_1.jpeg)
+
+![Second](Reproduce_AI/images/repro_2.jpeg)
+
+inside an `images/` directory and reference them here.
 
 ---
 
