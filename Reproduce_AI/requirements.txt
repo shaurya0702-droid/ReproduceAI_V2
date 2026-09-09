@@ -5,6 +5,7 @@ langchain-text-splitters
 langchain-huggingface
 langchain-chroma
 langchain-groq
+tavily-python
 pymupdf
 sentence-transformers
 chromadb

@@ -20,17 +20,17 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # Upload + Analyze
-uploaded_file= st.file_uploader("Upload Research Paper (PDF)", type=["pdf"])
-analyze= st.button("Analyze Paper", type="primary", disabled=uploaded_file is None)
+uploaded_file = st.file_uploader("Upload Research Paper (PDF)", type=["pdf"])
+analyze = st.button("Analyze Paper", type="primary", disabled=uploaded_file is None)
 if analyze and uploaded_file:
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
         tmp.write(uploaded_file.read())
-        pdf_path= tmp.name
+        pdf_path = tmp.name
     with st.spinner("Analyzing paper... this may take a minute."):
         try:
             report, retriever, llm = run_pipeline(pdf_path)
             st.session_state.report = report
-            st.session_state.retriever= retriever
+            st.session_state.retriever = retriever
             st.session_state.llm = llm
             st.session_state.messages = [{
                 "role": "assistant",
@@ -44,16 +44,16 @@ if analyze and uploaded_file:
 
 # Chat Interface
 if st.session_state.report:
-    report= st.session_state.report
-    # Display previous messages
+    report = st.session_state.report
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
-    # Helper function for cached outputs
+
     def show_cached(user_msg, bot_msg):
         st.session_state.messages.append({"role": "user", "content": user_msg})
         st.session_state.messages.append({"role": "assistant", "content": bot_msg})
         st.rerun()
+
     st.write("")
     col1, col2, col3, col4, col5 = st.columns(5)
     with col1:
@@ -61,7 +61,7 @@ if st.session_state.report:
             show_cached("Show me the paper overview", report["overview"])
     with col2:
         if st.button("📊 Metadata", use_container_width=True):
-            metadata= ""
+            metadata = ""
             for key, value in report["metadata"].items():
                 metadata += f"**{key}**: {value}\n"
             show_cached("Show me the extracted metadata", metadata)
@@ -74,6 +74,7 @@ if st.session_state.report:
     with col5:
         if st.button("⚠ Risk", use_container_width=True):
             show_cached("What are the reproduction risks?", report["risk_report"])
+
     st.caption(
         "Try asking: *Explain the architecture* · *Why did they choose this optimizer?* · *What are the limitations?* · *Explain Section 4*"
     )
@@ -82,10 +83,11 @@ if st.session_state.report:
         st.session_state.messages.append({"role": "user", "content": user_question})
         with st.spinner("Thinking..."):
             try:
-                answer= chat_with_paper(
+                answer = chat_with_paper(
                     st.session_state.llm,
                     st.session_state.retriever,
-                    user_question
+                    user_question,
+                    paper_title=report["metadata"].get("title")
                 )
             except Exception as e:
                 if "rate_limit" in str(e).lower():

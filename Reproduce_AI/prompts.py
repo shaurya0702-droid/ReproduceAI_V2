@@ -190,12 +190,12 @@ chat_prompt = PromptTemplate(
     template="""
 You are an AI Research Assistant helping a user understand and reproduce a research paper.
 
-Answer ONLY using the provided context from the paper and related to it .
+Answer ONLY using the provided context and related to it.
 
-If the answer is not present in the context, reply exactly:
+If the context is genuinely empty, reply exactly:
 "I couldn't find that information in the paper."
 
-Do not make assumptions or use outside knowledge.
+Do not make assumptions beyond the given context.
 
 Context:
 
@@ -208,4 +208,28 @@ Question:
 Answer:
 """,
     input_variables=["context", "question"],
+)
+
+
+# CRAG: scores how well the retrieved chunks actually answer the question
+crag_eval_prompt = PromptTemplate(
+    template="""
+You are the retrieval evaluator in a Corrective Retrieval Augmented Generation system.
+
+Question:
+{question}
+
+Retrieved documents:
+{documents}
+
+Judge ONLY the retrieved documents, not outside knowledge.
+
+- CORRECT: the documents contain enough relevant information to answer.
+- AMBIGUOUS: the documents have some relevant information but are incomplete or uncertain.
+- INCORRECT: the documents do not contain useful information for answering.
+
+Respond with ONLY a JSON object, no other text, in exactly this shape:
+{{"action": "CORRECT" or "AMBIGUOUS" or "INCORRECT", "score": <float between 0.0 and 1.0>, "reason": "<short explanation>"}}
+""",
+    input_variables=["question", "documents"],
 )
